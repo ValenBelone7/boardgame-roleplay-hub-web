@@ -1,0 +1,31 @@
+# Dependencias (pnpm)
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+
+# Next.js
+.next/
+out/
+build/
+next-env.d.ts
+*.tsbuildinfo
+
+# Variables de entorno
+.env
+.env*.local
+
+# Logs
+*.log
+
+# Editores / SO
+.vscode/
+.idea/
+.DS_Store
+
+# Contexto y planes (se comparten por fuera de GitHub)
+CLAUDE.md
+CONTEXTO.md
+contexto/
+planes/
+PLAN*.md
+.claude/
