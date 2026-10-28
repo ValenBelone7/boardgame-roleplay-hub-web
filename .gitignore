@@ -10,6 +10,13 @@ build/
 next-env.d.ts
 *.tsbuildinfo
 
+# Tests
+coverage/
+
+# Deploy
+.vercel/
+*.pem
+
 # Variables de entorno
 .env
 .env*.local
@@ -29,3 +36,4 @@ contexto/
 planes/
 PLAN*.md
 .claude/
+AGENTS.md
