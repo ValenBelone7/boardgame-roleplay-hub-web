@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Sin cacheComponents: el layout raíz lee la cookie de sesión y con esa opción
+  // cada lectura de cookies tendría que ir dentro de un <Suspense>
   turbopack: {
     rules: {
       "*.css": {
