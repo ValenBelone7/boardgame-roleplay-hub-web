@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
+/* Paleta de Arcana */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --pergamino: #f3eadb;
+  --crema: #fbf6ee;
+  --arena: #e6cfa3;
+  --caramelo: #c98f4e;
+  --bordo: #6e1e2b;
+  --bordo-oscuro: #45101a;
+  --tinta: #2a181b;
+  --tinta-suave: #6b4e4a;
+  --rosado: #f1dcc4;
+  --linea: #dcc9a8;
 }
 
+/* Clases de Tailwind a partir de las variables: bg-bordo, text-tinta, border-linea... */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-pergamino: var(--pergamino);
+  --color-crema: var(--crema);
+  --color-arena: var(--arena);
+  --color-caramelo: var(--caramelo);
+  --color-bordo: var(--bordo);
+  --color-bordo-oscuro: var(--bordo-oscuro);
+  --color-tinta: var(--tinta);
+  --color-tinta-suave: var(--tinta-suave);
+  --color-rosado: var(--rosado);
+  --color-linea: var(--linea);
+
+  --font-sans: var(--f-texto), "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--f-serif), Georgia, serif;
+
+  --shadow-ficha: 0 6px 0 var(--bordo-oscuro);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Archivo "ancha": la usamos en títulos y en el nombre Arcana */
+@utility font-ancha {
+  font-stretch: 125%;
+}
+
+html {
+  background-color: var(--pergamino);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--pergamino);
+  color: var(--tinta);
 }
