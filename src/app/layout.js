@@ -1,28 +1,29 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Archivo, Young_Serif } from "next/font/google";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// Archivo variable con el eje de ancho (wdth) para los títulos anchos
+const texto = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--f-texto" });
+const serif = Young_Serif({ subsets: ["latin"], weight: "400", variable: "--f-serif" });
 
 export const metadata = {
-  title: "Arcana",
-  description: "Tienda de juegos de mesa y de rol, torneos y leyendas.",
+  title: {
+    default: "Arcana — Juegos de mesa y de rol",
+    template: "%s · Arcana",
+  },
+  description:
+    "Tienda de juegos de mesa y de rol con torneos, campañas y noches de juego en el local.",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="es" className={`${texto.variable} ${serif.variable}`}>
+      <body className="flex min-h-screen flex-col font-sans antialiased">
+        <Navbar />
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 }
