@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Las clases dark: se activan con la clase .dark en <html> (la pone TemaContext) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Paleta de Arcana */
 :root {
   --pergamino: #f3eadb;
@@ -12,6 +15,22 @@
   --tinta-suave: #6b4e4a;
   --rosado: #f1dcc4;
   --linea: #dcc9a8;
+
+  /* Colores que cambian con el tema (claro por defecto). Los de la paleta quedan fijos */
+  --fondo: var(--pergamino);
+  --superficie: var(--crema);
+  --texto: var(--tinta);
+  --texto-suave: var(--tinta-suave);
+  --borde: var(--linea);
+}
+
+/* Tema oscuro: fondo tinta, superficies bordó oscuro, mismos acentos */
+.dark {
+  --fondo: var(--tinta);
+  --superficie: var(--bordo-oscuro);
+  --texto: var(--pergamino);
+  --texto-suave: var(--arena);
+  --borde: #5a3236;
 }
 
 /* Clases de Tailwind a partir de las variables: bg-bordo, text-tinta, border-linea... */
@@ -27,6 +46,12 @@
   --color-rosado: var(--rosado);
   --color-linea: var(--linea);
 
+  --color-fondo: var(--fondo);
+  --color-superficie: var(--superficie);
+  --color-texto: var(--texto);
+  --color-texto-suave: var(--texto-suave);
+  --color-borde: var(--borde);
+
   --font-sans: var(--f-texto), "Helvetica Neue", Arial, sans-serif;
   --font-serif: var(--f-serif), Georgia, serif;
 
@@ -39,10 +64,10 @@
 }
 
 html {
-  background-color: var(--pergamino);
+  background-color: var(--fondo);
 }
 
 body {
-  background-color: var(--pergamino);
-  color: var(--tinta);
+  background-color: var(--fondo);
+  color: var(--texto);
 }

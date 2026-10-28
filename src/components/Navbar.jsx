@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "@/components/Logo";
+import ToggleTema from "@/components/ToggleTema";
 
 const items = [
   { href: "/catalogo", label: "Catálogo" },
@@ -39,6 +40,8 @@ export default function Navbar() {
             );
           })}
         </ul>
+
+        <ToggleTema />
 
         <Link
           href="/login"

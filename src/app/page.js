@@ -7,21 +7,21 @@ const secciones = [
     titulo: "Catálogo",
     texto: "Juegos de mesa, de rol, expansiones y accesorios. Filtrá por cómo se juega, no solo por género.",
     enlace: "Ver el catálogo",
-    fondo: "bg-pergamino",
+    fondo: "bg-fondo",
   },
   {
     href: "/eventos",
     titulo: "En la mesa",
     texto: "Torneos, campañas de rol y noches de juego abiertas. Anotate antes de que se llene la mesa.",
     enlace: "Ver la agenda",
-    fondo: "bg-crema",
+    fondo: "bg-superficie",
   },
   {
     href: "/salon-de-la-fama",
     titulo: "Salón de la fama",
     texto: "Cada campeón recibe su arcano. La comunidad escribe la leyenda que lo acompaña.",
     enlace: "Ver los campeones",
-    fondo: "bg-pergamino",
+    fondo: "bg-fondo",
   },
 ];
 
@@ -59,9 +59,12 @@ export default function Home() {
           <div className="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-6">
             <div>
               <h2 className="mb-3 font-ancha text-5xl font-black tracking-tight lg:text-7xl">{s.titulo}</h2>
-              <p className="max-w-[46ch] text-lg text-tinta-suave">{s.texto}</p>
+              <p className="max-w-[46ch] text-lg text-texto-suave">{s.texto}</p>
             </div>
-            <Link href={s.href} className="py-3 font-bold text-bordo underline-offset-4 hover:underline">
+            <Link
+              href={s.href}
+              className="py-3 font-bold text-bordo underline-offset-4 hover:underline dark:text-arena"
+            >
               {s.enlace}
             </Link>
           </div>
