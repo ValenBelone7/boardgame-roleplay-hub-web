@@ -26,6 +26,18 @@ export function formatearFecha(iso) {
   return fecha.format(new Date(iso));
 }
 
+const fechaCorta = new Intl.DateTimeFormat("es-AR", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "America/Argentina/Buenos_Aires",
+});
+
+// "12 de octubre de 2026", para reseñas y altas
+export function formatearFechaCorta(iso) {
+  return fechaCorta.format(new Date(iso));
+}
+
 export function formatearJugadores(min, max) {
   if (min === max) return min === 1 ? "1 jugador" : `${min} jugadores`;
   return `${min}–${max} jugadores`;
