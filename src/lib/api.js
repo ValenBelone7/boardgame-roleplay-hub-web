@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getToken } from "@/lib/auth";
+import { erroresDeDrf } from "@/lib/errores";
 
 // Solo la lee el servidor de Next (sin NEXT_PUBLIC_): el navegador nunca habla con Django
 export const API_URL = process.env.API_URL;
@@ -74,4 +75,27 @@ export async function getUno(path) {
   const res = await pedir(path);
   if (res.status === 404) return null;
   return res.json();
+}
+
+// Para las Server Actions (escrituras), calcado de llamar() del profe: manda JSON con el token.
+// Devuelve la respuesta, o null si la API no responde
+export async function llamar(path, opciones = {}) {
+  const token = await getToken();
+  return fetch(`${API_URL}${path}`, {
+    ...opciones,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    cache: "no-store",
+  }).catch(() => null);
+}
+
+// Convierte una respuesta fallida de llamar() en lo que muestran los formularios:
+// { error } (mensaje general) y { errores } (por campo, como los manda DRF)
+export async function errorDeRespuesta(res) {
+  if (!res) return { error: "No se pudo conectar con la API. Si estaba dormida, probá de nuevo en unos segundos." };
+  if (res.status === 401) return { error: "Tu sesión venció. Volvé a iniciar sesión." };
+  const { campos, general } = erroresDeDrf(await res.json().catch(() => null));
+  return { errores: campos, error: general };
 }
