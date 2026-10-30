@@ -1,5 +1,24 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import TitularDados from "@/components/TitularDados";
+import ProductoCard from "@/components/ProductoCard";
+import Cargando from "@/components/Cargando";
+import { ENDPOINTS, getPagina } from "@/lib/api";
+
+// Los 4 últimos productos que entraron a la tienda
+async function Novedades() {
+  const pagina = await getPagina(ENDPOINTS.productos, "activo=true&ordering=-fecha_alta");
+
+  return (
+    <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {pagina.results.slice(0, 4).map((p) => (
+        <li key={p.id} className="flex">
+          <ProductoCard producto={p} />
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 const secciones = [
   {
@@ -51,6 +70,20 @@ export default function Home() {
               Ver la agenda
             </Link>
           </div>
+        </div>
+      </section>
+
+      <section className="bg-superficie px-6 py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+            <h2 className="font-ancha text-4xl font-black tracking-tight lg:text-5xl">Novedades</h2>
+            <Link href="/catalogo?ordering=-fecha_alta" className="py-3 font-bold text-bordo hover:underline dark:text-arena">
+              Ver todo el catálogo
+            </Link>
+          </div>
+          <Suspense fallback={<Cargando texto="Cargando novedades" />}>
+            <Novedades />
+          </Suspense>
         </div>
       </section>
 
