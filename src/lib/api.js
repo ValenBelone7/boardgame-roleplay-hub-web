@@ -18,6 +18,8 @@ export const ENDPOINTS = {
   pedidos: "/api/pedidos/",
   itemsPedido: "/api/items-pedido/",
   me: "/api/usuarios/me/",
+  registro: "/api/usuarios/registro/",
+  token: "/api/token/",
 };
 
 // GET a la API, con el token si hay sesión. Las páginas no envuelven estas funciones en
