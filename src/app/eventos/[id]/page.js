@@ -1,0 +1,121 @@
+import { Suspense } from "react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ENDPOINTS, getPagina, list } from "@/lib/api";
+import { getUsuario } from "@/lib/auth";
+import { armarQuery } from "@/lib/filtros";
+import { formatearFecha, formatearPrecio } from "@/lib/formato";
+import Badge from "@/components/Badge";
+import BotonInscribirse from "@/components/BotonInscribirse";
+import Cargando from "@/components/Cargando";
+import EstadoEvento from "@/components/EstadoEvento";
+import LeyendaCard from "@/components/LeyendaCard";
+import LeyendaForm from "@/components/LeyendaForm";
+import LugaresEvento from "@/components/LugaresEvento";
+import Podio from "@/components/Podio";
+
+export const metadata = {
+  title: "Evento",
+};
+
+// Va dentro de un Suspense: el evento se ve enseguida y las leyendas llegan después
+async function Leyendas({ eventoId }) {
+  const leyendas = await list(ENDPOINTS.leyendas, armarQuery({ evento: eventoId }));
+
+  return (
+    <div className="grid gap-6">
+      {leyendas.length === 0 ? (
+        <p className="text-texto-suave">Todavía nadie contó lo que pasó en esta mesa.</p>
+      ) : (
+        <ul className="grid gap-4">
+          {leyendas.map((l) => (
+            <li key={l.id}>
+              <LeyendaCard leyenda={l} />
+            </li>
+          ))}
+        </ul>
+      )}
+      <LeyendaForm eventoId={eventoId} />
+    </div>
+  );
+}
+
+export default async function EventoPage({ params }) {
+  const { id } = await params;
+  // El listado es la única lectura pública con el cupo: eventos/{id}/ no trae los inscriptos
+  // e inscripciones/ pide login, pero un visitante también tiene que ver cuántos lugares quedan
+  const eventos = await list(ENDPOINTS.eventos);
+  const evento = eventos.find((e) => String(e.id) === id);
+  if (!evento) notFound();
+
+  // inscripciones/ pide login: sin sesión no se consulta
+  const usuario = await getUsuario();
+  const inscripciones = usuario
+    ? await getPagina(ENDPOINTS.inscripciones, armarQuery({ evento: evento.id, usuario: usuario.id }))
+    : null;
+  const inscripcion = inscripciones?.results[0] ?? null;
+
+  const costo = Number(evento.costo_inscripcion);
+  const organizador = evento.organizador.alias || evento.organizador.username;
+
+  return (
+    <article className="px-6 py-12">
+      <div className="mx-auto max-w-6xl">
+        <Link href="/eventos" className="font-bold text-bordo hover:underline dark:text-arena">
+          ← Volver a los eventos
+        </Link>
+
+        <div className="mt-6 grid max-w-3xl gap-5">
+          <div className="flex flex-wrap gap-2">
+            <Badge>{evento.tipo_display}</Badge>
+            <EstadoEvento evento={evento} />
+          </div>
+          <h1 className="font-serif text-4xl leading-tight lg:text-5xl">{evento.nombre}</h1>
+          {evento.descripcion && <p className="text-lg">{evento.descripcion}</p>}
+
+          <dl className="grid gap-4 rounded-2xl border-2 border-borde bg-superficie p-6 sm:grid-cols-2">
+            <div>
+              <dt className="text-sm text-texto-suave">Fecha</dt>
+              <dd className="font-medium">{formatearFecha(evento.fecha)}</dd>
+            </div>
+            <div>
+              <dt className="text-sm text-texto-suave">Costo</dt>
+              <dd className="font-medium">{costo === 0 ? "Gratis" : formatearPrecio(costo)}</dd>
+            </div>
+            {evento.juego && (
+              <div>
+                <dt className="text-sm text-texto-suave">Juego</dt>
+                <dd className="font-medium">
+                  <Link href={`/catalogo/${evento.juego.id}`} className="text-bordo underline dark:text-arena">
+                    {evento.juego.nombre}
+                  </Link>
+                </dd>
+              </div>
+            )}
+            <div>
+              <dt className="text-sm text-texto-suave">Organiza</dt>
+              <dd className="font-medium">{organizador}</dd>
+            </div>
+          </dl>
+
+          <LugaresEvento evento={evento} />
+          <BotonInscribirse evento={evento} inscripcion={inscripcion} />
+        </div>
+
+        <Suspense fallback={<Cargando texto="Cargando el podio" />}>
+          <Podio eventoId={evento.id} />
+        </Suspense>
+
+        {/* Una leyenda cuenta algo que ya pasó en la mesa: el back solo las acepta en estos estados */}
+        {(evento.estado === "EN_CURSO" || evento.estado === "FINALIZADO") && (
+          <section className="mt-14 max-w-3xl">
+            <h2 className="mb-6 font-ancha text-3xl font-black">Leyendas</h2>
+            <Suspense fallback={<Cargando texto="Cargando las leyendas" />}>
+              <Leyendas eventoId={evento.id} />
+            </Suspense>
+          </section>
+        )}
+      </div>
+    </article>
+  );
+}
