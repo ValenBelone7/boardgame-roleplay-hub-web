@@ -16,7 +16,7 @@ export default function EventoCard({ evento }) {
         <span className="uppercase">{mes}</span>
       </div>
 
-      <div className="grid min-w-0 grow gap-3 p-5">
+      <div className="grid min-w-0 grow content-start gap-3 p-5">
         <div className="flex flex-wrap gap-2">
           <Badge>{evento.tipo_display}</Badge>
           <EstadoEvento evento={evento} />

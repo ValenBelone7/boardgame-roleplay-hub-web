@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import TitularDados from "@/components/TitularDados";
 import ProductoCard from "@/components/ProductoCard";
+import EventoCard from "@/components/EventoCard";
 import Cargando from "@/components/Cargando";
 import { ENDPOINTS, getPagina } from "@/lib/api";
 
@@ -14,6 +15,25 @@ async function Novedades() {
       {pagina.results.slice(0, 4).map((p) => (
         <li key={p.id} className="flex">
           <ProductoCard producto={p} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+// Los 3 eventos programados más cercanos
+async function ProximosEventos() {
+  const pagina = await getPagina(ENDPOINTS.eventos, "estado=PROGRAMADO&ordering=fecha");
+
+  if (pagina.results.length === 0) {
+    return <p className="text-texto-suave">Por ahora no hay eventos programados.</p>;
+  }
+
+  return (
+    <ul className="grid gap-6 lg:grid-cols-3">
+      {pagina.results.slice(0, 3).map((e) => (
+        <li key={e.id} className="flex">
+          <EventoCard evento={e} />
         </li>
       ))}
     </ul>
@@ -83,6 +103,20 @@ export default function Home() {
           </div>
           <Suspense fallback={<Cargando texto="Cargando novedades" />}>
             <Novedades />
+          </Suspense>
+        </div>
+      </section>
+
+      <section className="bg-fondo px-6 py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+            <h2 className="font-ancha text-4xl font-black tracking-tight lg:text-5xl">Próximos eventos</h2>
+            <Link href="/eventos" className="py-3 font-bold text-bordo hover:underline dark:text-arena">
+              Ver todos los eventos
+            </Link>
+          </div>
+          <Suspense fallback={<Cargando texto="Cargando los eventos" />}>
+            <ProximosEventos />
           </Suspense>
         </div>
       </section>
