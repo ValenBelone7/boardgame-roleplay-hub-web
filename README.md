@@ -189,7 +189,7 @@ src/
 pnpm test --run
 ```
 
-48 tests en 9 archivos de `src/app/__tests__/`. Vitest no soporta Server Components `async`, así que se testean esquemas, utilidades y contextos.
+50 tests en 10 archivos de `src/app/__tests__/`. Vitest no soporta Server Components `async`, así que se testean esquemas, utilidades, contextos y un formulario cliente.
 
 | Archivo | Qué cubre |
 |---|---|
@@ -202,6 +202,7 @@ pnpm test --run
 | `filtros.test.js` | Armado de la query y vuelta a la página 1 al cambiar un filtro |
 | `errores.test.js` | Las formas en que DRF devuelve sus errores |
 | `TemaContext.test.jsx` | Tema inicial y cambio de tema guardado |
+| `LoginForm.test.jsx` | Integración: errores de Zod sin llamar a la API, y error de la API con la acción mockeada |
 
 ## Despliegue
 
