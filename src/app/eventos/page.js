@@ -27,7 +27,7 @@ async function Resultados({ params }) {
   if (pagina.results.length === 0) {
     return (
       <p className="rounded-2xl border-2 border-borde bg-superficie px-5 py-12 text-center text-texto-suave">
-        No encontramos eventos con esos filtros. Probá con otros o limpialos.
+        No encontramos eventos con esos filtros. Probá con otro estado o limpialos.
       </p>
     );
   }
