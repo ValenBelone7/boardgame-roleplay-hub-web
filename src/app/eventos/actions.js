@@ -15,6 +15,18 @@ export async function inscribirse(eventoId, datos) {
   return {};
 }
 
+// El autor lo pone el back con el token. Si el evento todavía no se jugó, responde 400 en "evento"
+export async function crearLeyenda(eventoId, datos) {
+  const res = await llamar(ENDPOINTS.leyendas, {
+    method: "POST",
+    body: JSON.stringify({ evento: eventoId, titulo: datos.titulo, relato: datos.relato }),
+  });
+  if (!res?.ok) return errorDeRespuesta(res);
+
+  revalidatePath(`/eventos/${eventoId}`);
+  return {};
+}
+
 export async function darseDeBaja(inscripcionId, eventoId) {
   const res = await llamar(`${ENDPOINTS.inscripciones}${inscripcionId}/`, { method: "DELETE" });
   if (!res?.ok) return errorDeRespuesta(res);

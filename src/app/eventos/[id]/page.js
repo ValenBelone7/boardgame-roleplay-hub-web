@@ -9,12 +9,36 @@ import Badge from "@/components/Badge";
 import BotonInscribirse from "@/components/BotonInscribirse";
 import Cargando from "@/components/Cargando";
 import EstadoEvento from "@/components/EstadoEvento";
+import LeyendaCard from "@/components/LeyendaCard";
+import LeyendaForm from "@/components/LeyendaForm";
 import LugaresEvento from "@/components/LugaresEvento";
 import Podio from "@/components/Podio";
 
 export const metadata = {
   title: "Evento",
 };
+
+// Va dentro de un Suspense: el evento se ve enseguida y las leyendas llegan después
+async function Leyendas({ eventoId }) {
+  const leyendas = await list(ENDPOINTS.leyendas, armarQuery({ evento: eventoId }));
+
+  return (
+    <div className="grid gap-6">
+      {leyendas.length === 0 ? (
+        <p className="text-texto-suave">Todavía nadie contó lo que pasó en esta mesa.</p>
+      ) : (
+        <ul className="grid gap-4">
+          {leyendas.map((l) => (
+            <li key={l.id}>
+              <LeyendaCard leyenda={l} />
+            </li>
+          ))}
+        </ul>
+      )}
+      <LeyendaForm eventoId={eventoId} />
+    </div>
+  );
+}
 
 export default async function EventoPage({ params }) {
   const { id } = await params;
@@ -81,6 +105,16 @@ export default async function EventoPage({ params }) {
         <Suspense fallback={<Cargando texto="Cargando el podio" />}>
           <Podio eventoId={evento.id} />
         </Suspense>
+
+        {/* Una leyenda cuenta algo que ya pasó en la mesa: el back solo las acepta en estos estados */}
+        {(evento.estado === "EN_CURSO" || evento.estado === "FINALIZADO") && (
+          <section className="mt-14 max-w-3xl">
+            <h2 className="mb-6 font-ancha text-3xl font-black">Leyendas</h2>
+            <Suspense fallback={<Cargando texto="Cargando las leyendas" />}>
+              <Leyendas eventoId={evento.id} />
+            </Suspense>
+          </section>
+        )}
       </div>
     </article>
   );
