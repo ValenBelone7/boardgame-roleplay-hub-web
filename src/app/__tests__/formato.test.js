@@ -1,4 +1,4 @@
-import { formatearPrecio, formatearFecha, formatearFechaCorta, formatearJugadores } from "@/lib/formato";
+import { formatearPrecio, formatearFecha, formatearFechaCorta, formatearDiaMes, formatearJugadores } from "@/lib/formato";
 
 describe("formatearPrecio", () => {
   it("debe mostrar pesos con punto de miles y sin centavos", () => {
@@ -25,6 +25,13 @@ describe("formatearFechaCorta", () => {
   it("debe mostrar día, mes y año en hora de Argentina", () => {
     // 01:30 UTC del 13 todavía es el 12 en Argentina
     expect(formatearFechaCorta("2026-10-13T01:30:00Z")).toBe("12 de octubre de 2026");
+  });
+});
+
+describe("formatearDiaMes", () => {
+  it("debe separar el día y el mes abreviado en hora de Argentina", () => {
+    // 01:30 UTC del 1/12 todavía es el 30/11 en Argentina
+    expect(formatearDiaMes("2026-12-01T01:30:00Z")).toEqual({ dia: "30", mes: "nov" });
   });
 });
 

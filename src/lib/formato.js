@@ -38,6 +38,21 @@ export function formatearFechaCorta(iso) {
   return fechaCorta.format(new Date(iso));
 }
 
+const diaDelMes = new Intl.DateTimeFormat("es-AR", {
+  day: "numeric",
+  timeZone: "America/Argentina/Buenos_Aires",
+});
+const mesCorto = new Intl.DateTimeFormat("es-AR", {
+  month: "short",
+  timeZone: "America/Argentina/Buenos_Aires",
+});
+
+// { dia: "21", mes: "nov" }, para el costado de la tarjeta de un evento
+export function formatearDiaMes(iso) {
+  const fecha = new Date(iso);
+  return { dia: diaDelMes.format(fecha), mes: mesCorto.format(fecha).replace(".", "") };
+}
+
 export function formatearJugadores(min, max) {
   if (min === max) return min === 1 ? "1 jugador" : `${min} jugadores`;
   return `${min}–${max} jugadores`;
