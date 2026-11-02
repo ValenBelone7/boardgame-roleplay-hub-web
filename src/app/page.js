@@ -4,7 +4,7 @@ import TitularDados from "@/components/TitularDados";
 import ProductoCard from "@/components/ProductoCard";
 import EventoCard from "@/components/EventoCard";
 import Cargando from "@/components/Cargando";
-import { ENDPOINTS, getPagina } from "@/lib/api";
+import { ENDPOINTS, getPagina, idsDeMisEventos } from "@/lib/api";
 
 // Los 4 últimos productos que entraron a la tienda
 async function Novedades() {
@@ -23,7 +23,10 @@ async function Novedades() {
 
 // Los 3 eventos programados más cercanos
 async function ProximosEventos() {
-  const pagina = await getPagina(ENDPOINTS.eventos, "estado=PROGRAMADO&ordering=fecha");
+  const [pagina, misEventos] = await Promise.all([
+    getPagina(ENDPOINTS.eventos, "estado=PROGRAMADO&ordering=fecha"),
+    idsDeMisEventos(),
+  ]);
 
   if (pagina.results.length === 0) {
     return <p className="text-texto-suave">Por ahora no hay eventos programados.</p>;
@@ -33,7 +36,7 @@ async function ProximosEventos() {
     <ul className="grid gap-6 lg:grid-cols-3">
       {pagina.results.slice(0, 3).map((e) => (
         <li key={e.id} className="flex">
-          <EventoCard evento={e} />
+          <EventoCard evento={e} inscripto={misEventos.includes(e.id)} />
         </li>
       ))}
     </ul>

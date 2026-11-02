@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { ENDPOINTS, getPagina } from "@/lib/api";
+import { ENDPOINTS, getPagina, idsDeMisEventos } from "@/lib/api";
 import { armarQuery } from "@/lib/filtros";
 import FiltrosEventos from "@/components/FiltrosEventos";
 import EventoCard from "@/components/EventoCard";
@@ -22,7 +22,7 @@ async function Resultados({ params }) {
     ordering: estado === "PROGRAMADO" ? "fecha" : "-fecha",
     page: params.page,
   });
-  const pagina = await getPagina(ENDPOINTS.eventos, query);
+  const [pagina, misEventos] = await Promise.all([getPagina(ENDPOINTS.eventos, query), idsDeMisEventos()]);
 
   if (pagina.results.length === 0) {
     return (
@@ -40,7 +40,7 @@ async function Resultados({ params }) {
       <ul className="grid gap-6 lg:grid-cols-2">
         {pagina.results.map((e) => (
           <li key={e.id} className="flex">
-            <EventoCard evento={e} />
+            <EventoCard evento={e} inscripto={misEventos.includes(e.id)} />
           </li>
         ))}
       </ul>

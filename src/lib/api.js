@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getToken } from "@/lib/auth";
+import { getToken, getUsuario } from "@/lib/auth";
 import { erroresDeDrf } from "@/lib/errores";
 
 // Solo la lee el servidor de Next (sin NEXT_PUBLIC_): el navegador nunca habla con Django
@@ -75,6 +75,15 @@ export async function getUno(path) {
   const res = await pedir(path);
   if (res.status === 404) return null;
   return res.json();
+}
+
+// Los ids de los eventos a los que se anotó el usuario logueado, para marcarlos en las tarjetas.
+// Sin sesión no se consulta: inscripciones/ pide login
+export async function idsDeMisEventos() {
+  const usuario = await getUsuario();
+  if (!usuario) return [];
+  const inscripciones = await list(ENDPOINTS.inscripciones, `usuario=${usuario.id}`);
+  return inscripciones.map((i) => i.evento);
 }
 
 // Para las Server Actions (escrituras), calcado de llamar() del profe: manda JSON con el token.

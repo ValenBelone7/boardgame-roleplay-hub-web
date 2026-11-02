@@ -5,8 +5,9 @@ import LugaresEvento from "@/components/LugaresEvento";
 import Precio from "@/components/Precio";
 import { formatearDiaMes, formatearFecha } from "@/lib/formato";
 
-// "Ticket" de un evento del listado (viene con juego y organizador anidados)
-export default function EventoCard({ evento }) {
+// "Ticket" de un evento del listado (viene con juego y organizador anidados).
+// inscripto: si el usuario logueado ya se anotó. Lo averigua la página, una sola vez para todas
+export default function EventoCard({ evento, inscripto = false }) {
   const { dia, mes } = formatearDiaMes(evento.fecha);
 
   return (
@@ -20,6 +21,7 @@ export default function EventoCard({ evento }) {
         <div className="flex flex-wrap gap-2">
           <Badge>{evento.tipo_display}</Badge>
           <EstadoEvento evento={evento} />
+          {inscripto && evento.estado === "PROGRAMADO" && <Badge color="bordo">Ya tenés lugar</Badge>}
         </div>
 
         <h2 className="font-serif text-xl leading-snug">
