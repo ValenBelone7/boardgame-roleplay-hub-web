@@ -1,15 +1,9 @@
 import Link from "next/link";
 import Badge from "@/components/Badge";
-import Cupo from "@/components/Cupo";
+import EstadoEvento from "@/components/EstadoEvento";
+import LugaresEvento from "@/components/LugaresEvento";
 import Precio from "@/components/Precio";
 import { formatearDiaMes, formatearFecha } from "@/lib/formato";
-
-const coloresDeEstado = {
-  PROGRAMADO: "verde",
-  EN_CURSO: "ambar",
-  FINALIZADO: "arena",
-  CANCELADO: "rojo",
-};
 
 // "Ticket" de un evento del listado (viene con juego y organizador anidados)
 export default function EventoCard({ evento }) {
@@ -25,7 +19,7 @@ export default function EventoCard({ evento }) {
       <div className="grid min-w-0 grow gap-3 p-5">
         <div className="flex flex-wrap gap-2">
           <Badge>{evento.tipo_display}</Badge>
-          <Badge color={coloresDeEstado[evento.estado]}>{evento.estado_display}</Badge>
+          <EstadoEvento evento={evento} />
         </div>
 
         <h2 className="font-serif text-xl leading-snug">
@@ -43,7 +37,7 @@ export default function EventoCard({ evento }) {
           {evento.juego && ` · ${evento.juego.nombre}`}
         </p>
 
-        <Cupo inscriptos={evento.inscriptos} cupo={evento.cupo} />
+        <LugaresEvento evento={evento} />
 
         {Number(evento.costo_inscripcion) === 0 ? (
           <p className="font-bold">Gratis</p>
