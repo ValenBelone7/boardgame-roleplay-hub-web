@@ -1,9 +1,12 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ENDPOINTS, list } from "@/lib/api";
+import { ENDPOINTS, getPagina, list } from "@/lib/api";
+import { getUsuario } from "@/lib/auth";
+import { armarQuery } from "@/lib/filtros";
 import { formatearFecha, formatearPrecio } from "@/lib/formato";
 import Badge from "@/components/Badge";
+import BotonInscribirse from "@/components/BotonInscribirse";
 import Cargando from "@/components/Cargando";
 import EstadoEvento from "@/components/EstadoEvento";
 import LugaresEvento from "@/components/LugaresEvento";
@@ -20,6 +23,13 @@ export default async function EventoPage({ params }) {
   const eventos = await list(ENDPOINTS.eventos);
   const evento = eventos.find((e) => String(e.id) === id);
   if (!evento) notFound();
+
+  // inscripciones/ pide login: sin sesión no se consulta
+  const usuario = await getUsuario();
+  const inscripciones = usuario
+    ? await getPagina(ENDPOINTS.inscripciones, armarQuery({ evento: evento.id, usuario: usuario.id }))
+    : null;
+  const inscripcion = inscripciones?.results[0] ?? null;
 
   const costo = Number(evento.costo_inscripcion);
   const organizador = evento.organizador.alias || evento.organizador.username;
@@ -65,6 +75,7 @@ export default async function EventoPage({ params }) {
           </dl>
 
           <LugaresEvento evento={evento} />
+          <BotonInscribirse evento={evento} inscripcion={inscripcion} />
         </div>
 
         <Suspense fallback={<Cargando texto="Cargando el podio" />}>
